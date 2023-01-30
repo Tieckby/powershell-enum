@@ -10,6 +10,8 @@ AD Module LINK : https://github.com/samratashok/ADModule/blob/master/Microsoft.A
 
 AD Module README : https://github.com/samratashok/ADModule/blob/master/README.md
 
+Learn More From Microsoft : https://learn.microsoft.com/fr-fr/powershell/scripting/learn/ps101/03-discovering-objects?view=powershell-7.3
+
 - Basic Enumeration
 ```text
 ###This line create a new Organizational Unit (OU) in machineName.domaineName
