@@ -6,7 +6,9 @@ So here is a list of powershell commands for enumeration in Windows Active Direc
 
 IMPORTANT : most of those commands are integrated to Active Directory module, you need to import it first before using them if you're not in windows server.
 
-AD module link : https://github.com/samratashok/ADModule/blob/master/Microsoft.ActiveDirectory.Management.dll
+AD Module LINK : https://github.com/samratashok/ADModule/blob/master/Microsoft.ActiveDirectory.Management.dll
+
+AD Module README : https://github.com/samratashok/ADModule/blob/master/README.md
 
 - Basic Enumeration
 ```text
