@@ -4,16 +4,52 @@ Using powershell instead of external tools will help us to avoid triggering aler
 
 So here is a list of powershell commands for enumeration in Windows Active Directory environment. 
 
-IMPORTANT : most of those commands are integrated to Active Directory module , you need to import it first before using them.
+IMPORTANT : most of those commands are integrated to Active Directory module, you need to import it first before using them if you're not in windows server.
 
 AD module link : https://github.com/samratashok/ADModule/blob/master/Microsoft.ActiveDirectory.Management.dll
+
+- Basic Enumeration
+```text
+###This line create a new Organizational Unit (OU) in machineName.domaineName
+New-ADOrganizationalUnit -Name:"1SIMPLE1" -Path:"DC=test,DC=1simple1" -ProtectedFromAccidentalDeletion:$true -Server:"TestServer.test.1simple1"
+
+###Force Update Active Directory
+gpupdate /force
+
+###Get All Users With All Properties
+Get-ADUser -Filter *
+
+###Get User Where username==hello.test With Basic Properties
+Get-ADUser -Filter "SamAccountName -eq 'hello.test'"
+
+###Get User Where username==hello.test in the server test.1simple1
+Get-ADUser -Filter "SamAccountName -eq 'hello.test'" -Server test.1simple1
+
+###Get User with (mail, lastLogin and WhenCreated) Where username==hello.test in the server test.1simple1
+Get-ADUser -Filter "SamAccountName -eq 'hello.test'" -Server test.1simple1 -Properties lastLogon, mail, WhenCreated
+
+
+###Get All Organizational Unit (OU)
+Get-ADOrganizationalUnit -Filter *
+
+###Get All Organizational Unit (OU) DistinguishedName as Table Format
+Get-ADOrganizationalUnit -Filter * | Format-Table DistinguishedName
+
+###Redirect CN=Users to a specific Organizational  (OU)
+###ou=myusers,DC=test,dc=1simple1 is the path for this exemple
+redirusr ou=myusers,DC=test,dc=1simple1
+
+###Redirect CN=Computers to a specific Organizational  (OU)
+###ou=mycomputers,DC=test,dc=1simple1 is the path for this exemple
+redircmp ou=mycomputers,DC=test,dc=1simple1
+```
 
 - Enumerate Domain Users
 ```text
 #Get Users in a specific Domain 
-Get-ADUser -server Domaincontroller -Filter * -Properties *
+Get-ADUser -server YourDomaincontroller -Filter * -Properties *
 #Get Users with PasswordNotRequired set to true
-Get-ADUser -server Domaincontroller -Filter {PasswordNotRequired -eq $true}
+Get-ADUser -server YourDomaincontroller -Filter {PasswordNotRequired -eq $true}
 #Get user's accounts that do not Require Kerberos Preauthentication 
 Get-ADUser -Filter 'useraccountcontrol -band 4194304' -Properties useraccountcontrol | Format-Table name
 #Enumerate user accounts with serverPrincipalName attribute set
@@ -32,9 +68,7 @@ Get-ADComputer -Filter 'operatingsystem -like "*Windows 7*" -and enabled -eq "tr
 - Enumerate Domain Trust:
 ```text
 #Get the list of all trusts within the current domain
-Get-ADTrust -Filter *               
-#Get the list of all trusts within the indicated domain
-Get-ADTrust -Identity us.domain.corporation.local   
+Get-ADTrust -Filter *
 ```
 - Enumerate File Shares:
 ```text
@@ -46,13 +80,13 @@ Get-SmbShare
 #Shows the tickets in memory
 klist
 #Get the default domain password policy from a specified domain
-Get-ADDefaultDomainPasswordPolicy -Identity corp.local.com
+Get-ADDefaultDomainPasswordPolicy -Identity YourDomain
 #Get all groups that contain the word "admin" in the group name
 Get-ADGroup -Filter 'Name -like "*admin*"' | select Name     
 #Get all members of the "Domain Admins" group
-Get-ADGroupMember -Identity "Domain Admins" -Recursive       
-#Get group membership for a specific user
-Get-ADPrincipalGroupMembership -Identity login001     
+Get-ADGroupMember -Identity "Domain Admins" -Recursive
+#Get group membership for a specific user (here: user.test)
+Get-ADPrincipalGroupMembership -Identity user.test
 ```
 
 ![My Image](commands.png)
